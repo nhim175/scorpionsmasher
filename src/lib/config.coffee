@@ -78,6 +78,7 @@ module.exports =
       src_mp3: 'assets/sound/pickup.mp3'
     die:
       src: 'assets/sound/die.mp3'
+      src_mp3: 'assets/sound/die.mp3'
     double_kill:
       src: 'assets/sound/double_kill.ogg'
       src_mp3: 'assets/sound/double_kill.mp3'
@@ -86,5 +87,4 @@ module.exports =
       src_mp3: 'assets/sound/triple_kill.mp3'
     cockroach:
       src: 'assets/sound/cockroach.mp3'
-
-
+      src_mp3: 'assets/sound/cockroach.mp3'

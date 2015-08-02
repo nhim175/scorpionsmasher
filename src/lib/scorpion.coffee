@@ -48,6 +48,10 @@ class Scorpion extends Module
     @plotPath()
     @sound.play()
 
+    $(game).on 'GameOverEvent', =>
+      @sound.stop()
+      window.plugins?.NativeAudio?.stop 'cockroach'
+
   plotPath: ->
     @path = []
     ix = 0
@@ -66,6 +70,7 @@ class Scorpion extends Module
   kill: ->
     if window.plugins?.NativeAudio
       window.plugins.NativeAudio.play 'die'
+      window.plugins.NativeAudio.stop 'cockroach'
     else
       @sound.stop()
       @dieSound.play()

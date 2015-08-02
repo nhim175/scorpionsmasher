@@ -38,7 +38,7 @@ class LoadState extends Module
       @game.load.audio soundName, sound.src
 
       if window.plugins?.NativeAudio
-        if soundName is 'intro'
+        if soundName is 'cockroach'
           window.plugins.NativeAudio.preloadComplex(soundName, sound.src_mp3, 0.2, 1, 0
             , (msg) ->
               console.log("Finish loading #{soundName}")

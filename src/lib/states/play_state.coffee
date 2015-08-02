@@ -169,6 +169,8 @@ class PlayState extends Module
     @shareBtnInTween.start()
     @resultInTween.start()
     @scorpionTimer.destroy()
+    @fastScorpionTimer.destroy()
+    @bossTimer.destroy()
     @game.isOver = true
     $(@game).trigger 'GameOverEvent'
 
@@ -182,18 +184,18 @@ class PlayState extends Module
 
           name = response.name
 
-          Util.resize @game.canvas.toDataURL(), 568, 320, (resizedDataURL) =>
+          Util.resize @game.canvas.toDataURL(), 320, 568, (resizedDataURL) =>
             $.post 'http://larvafun.com/upload.php', {data: resizedDataURL}, (data) =>
               @debug data
               url = 'http://larvafun.com/' + data.url
 
               dialogOptions =
                 method: 'feed'
-                link: 'http://larvafun.com'
+                link: 'http://scorpion-smasher.larvafun.com'
                 picture: url
-                name: name + ' survived for ' + @GUIClock.getSeconds() + ' seconds.' #'Test Post'
-                caption: 'Posted from the LarvaGame.'
-                description: 'Visit http://larvafun.com for more information.'
+                name: name + ' has killed ' + @GUIAxes.getScore() + ' scorpions.' #'Test Post'
+                caption: 'Posted from the ScorpionSmasher.'
+                description: 'Visit http://scorpion-smasher.larvafun.com for more information.'
 
               try 
                 facebookConnectPlugin.showDialog dialogOptions

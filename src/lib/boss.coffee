@@ -13,6 +13,6 @@ class Boss extends Scorpion
 
   bonus: 5
 
-  health: 3
+  health: 10
 
 module.exports = Boss

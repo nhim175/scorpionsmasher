@@ -42,11 +42,7 @@ class MenuState extends Module
     @GUI.add @startBtn
 
     @debug @startBtn
-
-  onMediaStatusChange: (status) =>
-    if status is Media.MEDIA_STOPPED
-      @_introAudio.play()
-
+    
   onStartBtnClickListener: =>
     @debug 'start btn click listener'
     @game.state.start 'play'

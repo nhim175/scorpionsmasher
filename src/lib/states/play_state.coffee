@@ -35,11 +35,11 @@ class PlayState extends Module
     @axe = new Axe @game
 
     @scorpionTimer = @game.time.create(false)
-    @scorpionTimer.loop 1000, (=> @addScorpion()), @
+    @scorpionTimer.loop 400, (=> @addScorpion()), @
     @scorpionTimer.start()
 
     @fastScorpionTimer = @game.time.create(false)
-    @fastScorpionTimer.loop 2000, (=> @addScorpion('fast')), @
+    @fastScorpionTimer.loop 400, (=> @addScorpion('fast')), @
     @fastScorpionTimer.start()
 
     @bossTimer = @game.time.create(false)

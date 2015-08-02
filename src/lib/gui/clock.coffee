@@ -9,7 +9,7 @@ class GUIClock extends Module
 
   logPrefix: 'GUIClock'
 
-  seconds: 5
+  seconds: 20
 
   constructor: (game) ->
     @game = game

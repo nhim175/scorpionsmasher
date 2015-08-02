@@ -90,7 +90,7 @@ Boss = (function(_super) {
 
   Boss.prototype.bonus = 5;
 
-  Boss.prototype.health = 3;
+  Boss.prototype.health = 10;
 
   return Boss;
 
@@ -230,7 +230,8 @@ module.exports = {
       src_mp3: 'assets/sound/pickup.mp3'
     },
     die: {
-      src: 'assets/sound/die.mp3'
+      src: 'assets/sound/die.mp3',
+      src_mp3: 'assets/sound/die.mp3'
     },
     double_kill: {
       src: 'assets/sound/double_kill.ogg',
@@ -241,7 +242,8 @@ module.exports = {
       src_mp3: 'assets/sound/triple_kill.mp3'
     },
     cockroach: {
-      src: 'assets/sound/cockroach.mp3'
+      src: 'assets/sound/cockroach.mp3',
+      src_mp3: 'assets/sound/cockroach.mp3'
     }
   }
 };
@@ -438,7 +440,7 @@ GUIClock = (function(_super) {
 
   GUIClock.prototype.logPrefix = 'GUIClock';
 
-  GUIClock.prototype.seconds = 5;
+  GUIClock.prototype.seconds = 20;
 
   function GUIClock(game) {
     this.updateTime = __bind(this.updateTime, this);
@@ -694,6 +696,13 @@ Scorpion = (function(_super) {
     }
     this.plotPath();
     this.sound.play();
+    $(game).on('GameOverEvent', (function(_this) {
+      return function() {
+        var _ref, _ref1;
+        _this.sound.stop();
+        return (_ref = window.plugins) != null ? (_ref1 = _ref.NativeAudio) != null ? _ref1.stop('cockroach') : void 0 : void 0;
+      };
+    })(this));
   }
 
   Scorpion.prototype.plotPath = function() {
@@ -726,6 +735,7 @@ Scorpion = (function(_super) {
     var _ref;
     if ((_ref = window.plugins) != null ? _ref.NativeAudio : void 0) {
       window.plugins.NativeAudio.play('die');
+      window.plugins.NativeAudio.stop('cockroach');
     } else {
       this.sound.stop();
       this.dieSound.play();
@@ -858,7 +868,7 @@ LoadState = (function(_super) {
       sound = _ref4[soundName];
       this.game.load.audio(soundName, sound.src);
       if ((_ref5 = window.plugins) != null ? _ref5.NativeAudio : void 0) {
-        if (soundName === 'intro') {
+        if (soundName === 'cockroach') {
           _results.push(window.plugins.NativeAudio.preloadComplex(soundName, sound.src_mp3, 0.2, 1, 0, function(msg) {
             return console.log("Finish loading " + soundName);
           }, function(msg) {
@@ -922,7 +932,6 @@ MenuState = (function(_super) {
 
   function MenuState(game) {
     this.onStartBtnClickListener = __bind(this.onStartBtnClickListener, this);
-    this.onMediaStatusChange = __bind(this.onMediaStatusChange, this);
   }
 
   MenuState.prototype.preload = function() {};
@@ -942,12 +951,6 @@ MenuState = (function(_super) {
     this.GUI.add(this.logo);
     this.GUI.add(this.startBtn);
     return this.debug(this.startBtn);
-  };
-
-  MenuState.prototype.onMediaStatusChange = function(status) {
-    if (status === Media.MEDIA_STOPPED) {
-      return this._introAudio.play();
-    }
   };
 
   MenuState.prototype.onStartBtnClickListener = function() {
@@ -1019,14 +1022,14 @@ PlayState = (function(_super) {
     this.enemies = [];
     this.axe = new Axe(this.game);
     this.scorpionTimer = this.game.time.create(false);
-    this.scorpionTimer.loop(1000, ((function(_this) {
+    this.scorpionTimer.loop(400, ((function(_this) {
       return function() {
         return _this.addScorpion();
       };
     })(this)), this);
     this.scorpionTimer.start();
     this.fastScorpionTimer = this.game.time.create(false);
-    this.fastScorpionTimer.loop(2000, ((function(_this) {
+    this.fastScorpionTimer.loop(400, ((function(_this) {
       return function() {
         return _this.addScorpion('fast');
       };
@@ -1200,6 +1203,8 @@ PlayState = (function(_super) {
     this.shareBtnInTween.start();
     this.resultInTween.start();
     this.scorpionTimer.destroy();
+    this.fastScorpionTimer.destroy();
+    this.bossTimer.destroy();
     this.game.isOver = true;
     return $(this.game).trigger('GameOverEvent');
   };
@@ -1214,7 +1219,7 @@ PlayState = (function(_super) {
             var name;
             _this.debug('me', response);
             name = response.name;
-            return Util.resize(_this.game.canvas.toDataURL(), 568, 320, function(resizedDataURL) {
+            return Util.resize(_this.game.canvas.toDataURL(), 320, 568, function(resizedDataURL) {
               return $.post('http://larvafun.com/upload.php', {
                 data: resizedDataURL
               }, function(data) {
@@ -1223,11 +1228,11 @@ PlayState = (function(_super) {
                 url = 'http://larvafun.com/' + data.url;
                 dialogOptions = {
                   method: 'feed',
-                  link: 'http://larvafun.com',
+                  link: 'http://scorpion-smasher.larvafun.com',
                   picture: url,
-                  name: name + ' survived for ' + _this.GUIClock.getSeconds() + ' seconds.',
-                  caption: 'Posted from the LarvaGame.',
-                  description: 'Visit http://larvafun.com for more information.'
+                  name: name + ' has killed ' + _this.GUIAxes.getScore() + ' scorpions.',
+                  caption: 'Posted from the ScorpionSmasher.',
+                  description: 'Visit http://scorpion-smasher.larvafun.com for more information.'
                 };
                 try {
                   return facebookConnectPlugin.showDialog(dialogOptions);
